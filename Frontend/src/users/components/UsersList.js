@@ -1,9 +1,9 @@
 import React from "react";
 
 import UserItem from "./UserItem";
-import "./UserList.css";
+import "./UsersList.css";
 
-const UserList = (props) => {
+const UsersList = (props) => {
   if (props.items.length === 0) {
     return (
       <div className="center">
@@ -27,4 +27,4 @@ const UserList = (props) => {
   );
 };
 
-export default UserList;
+export default UsersList;
