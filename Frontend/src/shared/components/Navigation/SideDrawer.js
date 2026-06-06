@@ -1,10 +1,9 @@
 import React from "react";
-import PropTypes from "prop-types";
+
+import "./SideDrawer.css";
 
 const SideDrawer = (props) => {
-  return <div>SideDrawer</div>;
+  return <aside className="side-drawer">{props.children}</aside>;
 };
-
-SideDrawer.propTypes = {};
 
 export default SideDrawer;
