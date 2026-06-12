@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useReducer } from "react";
 
 import Input from "../../shared/components/FormElements/Input";
 import {
@@ -7,13 +7,39 @@ import {
 } from "../../shared/util/validators";
 import "./NewPlace.css";
 
+const formReducer = (state, action) => {
+  switch (action.type) {
+    case "INPUT_CHANGE":
+      let formIsValid = true;
+      for (const inputId in state.inputs) {
+        if (!state.inputs[inputId]) {
+          continue;
+        }
+      }
+      return {
+        inputs: state.inputs,
+        isValid: formIsValid,
+      };
+    default:
+      return state;
+  }
+};
+
 const NewPlace = () => {
+  const [formState, dispatch] = useReducer(formReducer, {
+    inputs: {
+      title: null,
+      description: null,
+    },
+    isValid: false,
+  });
+
   const titleInputHandler = useCallback((id, value, isValid) => {
-    console.log(id, value, isValid);
+    dispatch({ type: "INPUT_CHANGE", id, value, isValid });
   }, []);
 
   const descriptionInputHandler = useCallback((id, value, isValid) => {
-    console.log(id, value, isValid);
+    dispatch({ type: "INPUT_CHANGE", id, value, isValid });
   }, []);
 
   return (
