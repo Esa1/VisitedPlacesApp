@@ -6,9 +6,6 @@ import Backdrop from "./Backdrop";
 import "./Modal.css";
 
 const ModalOverlay = (props) => {
-  console.log("modal overlay");
-  console.log(props);
-
   const content = (
     <div className={`modal ${props.className}`} style={props.style}>
       <header className={`modal__header ${props.headerClass}`}>
@@ -32,9 +29,6 @@ const ModalOverlay = (props) => {
 };
 
 const Modal = (props) => {
-  console.log("modal");
-  console.log(props);
-
   return (
     <>
       {props.show && <Backdrop onClick={props.onCancel} />}
