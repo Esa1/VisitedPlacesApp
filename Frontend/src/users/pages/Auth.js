@@ -1,5 +1,4 @@
-import React from "react";
-import { useForm } from "../../shared/hooks/form-hook";
+import React, { useState } from "react";
 
 import Card from "../../shared/components/UIElements/Card";
 import Input from "../../shared/components/FormElements/Input";
@@ -7,10 +6,14 @@ import Button from "../../shared/components/FormElements/Button";
 import {
   VALIDATOR_EMAIL,
   VALIDATOR_MINLENGTH,
+  VALIDATOR_REQUIRE,
 } from "../../shared/util/validators";
+import { useForm } from "../../shared/hooks/form-hook";
 import "./Auth.css";
 
 const Auth = () => {
+  const [isLoginMode, setIsLoginMode] = useState(true);
+
   const [formState, inputHandler] = useForm(
     {
       email: {
@@ -25,6 +28,10 @@ const Auth = () => {
     false,
   );
 
+  const switchModeHandler = () => {
+    setIsLoginMode((prevMode) => !prevMode);
+  };
+
   const authSubmitHandler = (event) => {
     event.preventDefault();
     console.log(formState.inputs);
@@ -35,34 +42,42 @@ const Auth = () => {
       <h2>Login Required</h2>
       <hr />
       <form onSubmit={authSubmitHandler}>
-        <div>
-          <label htmlFor="email">Email</label>
+        {!isLoginMode && (
           <Input
             element="input"
-            id="email"
-            type="email"
-            label="E-mail"
-            validators={[VALIDATOR_EMAIL()]}
-            errorText="Please enter a valid email address."
+            id="name"
+            type="text"
+            label="Full Name"
+            validators={[VALIDATOR_REQUIRE()]}
+            errorText="Please enter a name."
             onInput={inputHandler}
           />
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <Input
-            type="password"
-            element="input"
-            id="password"
-            label="Password"
-            validators={[VALIDATOR_MINLENGTH(6)]}
-            errorText="Please enter a password with at least 6 characters."
-            onInput={inputHandler}
-          />
-        </div>
+        )}
+        <Input
+          element="input"
+          id="email"
+          type="email"
+          label="E-mail"
+          validators={[VALIDATOR_EMAIL()]}
+          errorText="Please enter a valid email address."
+          onInput={inputHandler}
+        />
+        <Input
+          type="password"
+          element="input"
+          id="password"
+          label="Password"
+          validators={[VALIDATOR_MINLENGTH(6)]}
+          errorText="Please enter a password with at least 6 characters."
+          onInput={inputHandler}
+        />
         <Button type="submit" disabled={!formState.isValid}>
-          LOGIN
+          {isLoginMode ? "LOGIN" : "SIGNUP"}
         </Button>
       </form>
+      <Button inverse onClick={switchModeHandler}>
+        SWITCH TO {isLoginMode ? "SIGNUP" : "LOGIN"}
+      </Button>
     </Card>
   );
 };
