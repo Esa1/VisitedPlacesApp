@@ -7,7 +7,7 @@ import {
   VALIDATOR_EMAIL,
   VALIDATOR_MINLENGTH,
 } from "../../shared/util/validators";
-// import "./Auth.css";
+import "../../places/pages/PlaceForm.css";
 
 const Auth = () => {
   const [formState, inputHandler] = useForm(
@@ -30,7 +30,7 @@ const Auth = () => {
   };
 
   return (
-    <form onSubmit={authSubmitHandler}>
+    <form className="place-form" onSubmit={authSubmitHandler}>
       <div>
         <label htmlFor="email">Email</label>
         <Input
