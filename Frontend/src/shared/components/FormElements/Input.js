@@ -21,6 +21,22 @@ const inputReducer = (state, action) => {
   }
 };
 
+/*
+  This component is used in the Auth page and in the NewPlace page. It is a reusable component that can be used in other pages as well. It is a controlled component that uses the useReducer hook to manage its state. It also uses the useEffect hook to pass the input value and validity to the parent component (Auth or NewPlace) whenever it changes.
+
+  params:
+    element: "input" or "textarea"
+    id: string
+    type: string (only for input)
+    placeholder: string (only for input)
+    rows: number (only for textarea)
+    label: string
+    errorText: string
+    validators: array of validator functions
+    onInput: function that takes (id, value, isValid) as arguments and is called whenever the input value or validity changes
+    initialValue: string (optional)
+    initialValid: boolean (optional)
+*/
 const Input = (props) => {
   const [inputState, dispatch] = useReducer(inputReducer, {
     value: props.initialValue || "",
