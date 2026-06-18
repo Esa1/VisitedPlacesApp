@@ -14,7 +14,7 @@ import "./Auth.css";
 const Auth = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
 
-  const [formState, inputHandler] = useForm(
+  const [formState, inputHandler, setFormData] = useForm(
     {
       email: {
         value: "",
@@ -29,6 +29,27 @@ const Auth = () => {
   );
 
   const switchModeHandler = () => {
+    if (!isLoginMode) {
+      // switching to login mode, we can remove the name input from the form state
+      setFormData(
+        {
+          ...formState.inputs,
+          name: undefined,
+        },
+        formState.inputs.email.isValid && formState.inputs.password.isValid,
+      );
+    } else {
+      setFormData(
+        {
+          ...formState.inputs,
+          name: {
+            value: "",
+            isValid: false,
+          },
+        },
+        false,
+      );
+    }
     setIsLoginMode((prevMode) => !prevMode);
   };
 
@@ -67,7 +88,7 @@ const Auth = () => {
           element="input"
           id="password"
           label="Password"
-          validators={[VALIDATOR_MINLENGTH(6)]}
+          validators={[VALIDATOR_MINLENGTH(1)]}
           errorText="Please enter a password with at least 6 characters."
           onInput={inputHandler}
         />
