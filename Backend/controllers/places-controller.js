@@ -1,3 +1,5 @@
+const { v4: uuidv4 } = require("uuid");
+
 const HttpError = require("../models/http-error");
 
 const DUMMY_PLACES = [
@@ -39,10 +41,37 @@ const getPlacesByUserId = (req, res, next) => {
   res.json({ places });
 };
 
+const createPlace = (req, res, next) => {
+  console.log(req.body);
+  const { title, description, coordinates, address, creator } = req.body; // const title = req.body.title; const description = req.body.description; ...
+  const newPlace = {
+    id: uuidv4(), // generates a unique id
+    title,
+    description,
+    location: coordinates,
+    address,
+    creator,
+  };
+  DUMMY_PLACES.push(newPlace); // unshift(newPlace) to add to the beginning of the array
+  res.status(201).json({ place: newPlace });
+};
+
 module.exports = {
   getPlaceById,
   getPlacesByUserId,
+  createPlace,
 };
 
 // exports.getPlaceById = getPlaceById;
 // exports.getPlacesByUserId = getPlacesByUserId;
+
+// {
+//     "title": "New York Stock Exchange",
+//     "description": "Where the money lives",
+//     "coordinates": {
+//         "lat": 40.706,
+//         "lng": -74.010
+//     },
+//     "address": "New York Stock Exchange",
+//     "creator": "u2"
+// }
