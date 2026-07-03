@@ -56,22 +56,42 @@ const createPlace = (req, res, next) => {
   res.status(201).json({ place: newPlace });
 };
 
+const updatePlace = (req, res, next) => {
+  const { title, description } = req.body;
+  const placeId = req.params.pid;
+  const placeIndex = DUMMY_PLACES.findIndex((p) => p.id === placeId);
+
+  if (placeIndex === -1) {
+    throw new HttpError("Could not find a place for the provided id.", 404);
+  }
+
+  DUMMY_PLACES[placeIndex] = {
+    ...DUMMY_PLACES[placeIndex],
+    title,
+    description,
+  };
+  res.json({ place: DUMMY_PLACES[placeIndex] });
+};
+
+const deletePlace = (req, res, next) => {
+  const placeId = req.params.pid;
+  const placeIndex = DUMMY_PLACES.findIndex((p) => p.id === placeId);
+
+  if (placeIndex === -1) {
+    throw new HttpError("Could not find a place for the provided id.", 404);
+  }
+
+  DUMMY_PLACES.splice(placeIndex, 1);
+  res.json({ message: "Place deleted." });
+};
+
 module.exports = {
   getPlaceById,
   getPlacesByUserId,
   createPlace,
+  updatePlace,
+  deletePlace,
 };
 
 // exports.getPlaceById = getPlaceById;
 // exports.getPlacesByUserId = getPlacesByUserId;
-
-// {
-//     "title": "New York Stock Exchange",
-//     "description": "Where the money lives",
-//     "coordinates": {
-//         "lat": 40.706,
-//         "lng": -74.010
-//     },
-//     "address": "New York Stock Exchange",
-//     "creator": "u2"
-// }
