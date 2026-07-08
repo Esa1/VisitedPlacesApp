@@ -33,7 +33,7 @@ const getPlacesByUserId = (req, res, next) => {
 
   if (!places || places.length === 0) {
     throw new HttpError(
-      "Could not find a place for the provided user id.",
+      "Could not find any places for the provided user id.",
       404,
     );
   }
