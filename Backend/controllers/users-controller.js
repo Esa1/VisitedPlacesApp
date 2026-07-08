@@ -26,7 +26,20 @@ const getUsers = (req, res, next) => {
   res.json({ users: DUMMY_USERS });
 };
 
+const signup = (req, res, next) => {
+  const { name, email, password } = req.body;
+  const newUser = {
+    id: uuidv4(),
+    name,
+    email,
+    password,
+  };
+  DUMMY_USERS.push(newUser);
+  res.status(201).json({ user: newUser });
+};
+
 module.exports = {
   getUserById,
   getUsers,
+  signup,
 };
