@@ -38,8 +38,19 @@ const signup = (req, res, next) => {
   res.status(201).json({ user: newUser });
 };
 
+const login = (req, res, next) => {
+  const { email, password } = req.body;
+  const existingUser = DUMMY_USERS.find((u) => u.email === email);
+
+  if (!existingUser || existingUser.password !== password) {
+    throw new HttpError("Invalid credentials, could not log you in.", 401);
+  }
+  res.json({ user: existingUser });
+};
+
 module.exports = {
   getUserById,
   getUsers,
   signup,
+  login,
 };
