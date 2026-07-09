@@ -6,7 +6,7 @@ const {
   createPlace,
   updatePlace,
   deletePlace,
-} = require("../controllers/places-controller");
+} = require("../controllers/places-controllers");
 // const placesController = require("../controllers/places-controller");
 
 const router = express.Router();

@@ -28,6 +28,12 @@ const getUsers = (req, res, next) => {
 
 const signup = (req, res, next) => {
   const { name, email, password } = req.body;
+
+  const existingUser = DUMMY_USERS.find((u) => u.email === email);
+  if (existingUser) {
+    throw new HttpError("User exists already, please login instead.", 422);
+  }
+
   const newUser = {
     id: uuidv4(),
     name,
@@ -45,7 +51,7 @@ const login = (req, res, next) => {
   if (!existingUser || existingUser.password !== password) {
     throw new HttpError("Invalid credentials, could not log you in.", 401);
   }
-  res.json({ user: existingUser });
+  res.json({ message: "Logged in successfully." });
 };
 
 module.exports = {
