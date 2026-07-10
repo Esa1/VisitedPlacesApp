@@ -1,4 +1,5 @@
 const express = require("express");
+const { check } = require("express-validator");
 
 const {
   getUserById,
@@ -13,8 +14,20 @@ router.get("/", getUsers);
 
 router.get("/:uid", getUserById);
 
-router.post("/signup", signup);
+router.post(
+  "/signup",
+  [
+    check("name").not().isEmpty(),
+    check("email").isEmail().normalizeEmail(),
+    check("password").isLength({ min: 6 }),
+  ],
+  signup,
+);
 
-router.post("/login", login);
+router.post(
+  "/login",
+  [check("email").isEmail().normalizeEmail(), check("password").exists()],
+  login,
+);
 
 module.exports = router;
