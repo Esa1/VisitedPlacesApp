@@ -122,18 +122,32 @@ const updatePlace = async (req, res, next) => {
   }
 
   const placeId = req.params.pid;
-  const placeIndex = DUMMY_PLACES.findIndex((p) => p.id === placeId);
+  let place;
 
-  if (placeIndex === -1) {
-    throw new HttpError("Could not find a place for the provided id.", 404);
+  try {
+    place = await Place.findById(placeId);
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not update place.",
+      500,
+    );
+    return next(error);
   }
 
-  DUMMY_PLACES[placeIndex] = {
-    ...DUMMY_PLACES[placeIndex],
-    title,
-    description,
-  };
-  res.json({ place: DUMMY_PLACES[placeIndex] });
+  place.title = title;
+  place.description = description;
+
+  try {
+    await place.save();
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not update place.",
+      500,
+    );
+    return next(error);
+  }
+
+  res.json({ place: place.toObject({ getters: true }) });
 };
 
 const deletePlace = async (req, res, next) => {
