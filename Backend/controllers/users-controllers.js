@@ -28,28 +28,52 @@ const getUsers = (req, res, next) => {
   res.json({ users: DUMMY_USERS });
 };
 
-const signup = (req, res, next) => {
-  const { name, email, password } = req.body;
+const signup = async (req, res, next) => {
+  const { name, email, password, places } = req.body;
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    throw new HttpError("Invalid inputs passed, please check your data.", 422);
+    return next(
+      new HttpError("Invalid inputs passed, please check your data.", 422),
+    );
   }
 
-  const existingUser = User.findOne({ email: email });
+  let existingUser;
+  try {
+    existingUser = await User.findOne({ email: email });
+  } catch (err) {
+    const error = new HttpError(
+      "Signing up failed, please try again later.",
+      500,
+    );
+    return next(error);
+  }
 
   if (existingUser) {
-    throw new HttpError("User exists already, please login instead.", 422);
+    return next(
+      new HttpError("User exists already, please login instead.", 422),
+    );
   }
 
-  const newUser = {
-    id: uuidv4(),
+  const createdUser = new User({
     name,
     email,
+    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
     password,
-  };
-  DUMMY_USERS.push(newUser);
-  res.status(201).json({ user: newUser });
+    places: [],
+  });
+
+  try {
+    await createdUser.save();
+  } catch (err) {
+    const error = new HttpError(
+      "Signing up failed, please try again later.",
+      500,
+    );
+    return next(error);
+  }
+
+  res.status(201).json({ user: createdUser.toObject({ getters: true }) });
 };
 
 const login = (req, res, next) => {
