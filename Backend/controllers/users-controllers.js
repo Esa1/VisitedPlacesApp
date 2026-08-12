@@ -24,12 +24,23 @@ const getUserById = (req, res, next) => {
   res.json({ user });
 };
 
-const getUsers = (req, res, next) => {
-  res.json({ users: DUMMY_USERS });
+const getUsers = async (req, res, next) => {
+  let users;
+  try {
+    users = await User.find({}, "-password"); // Exclude the password field
+  } catch (err) {
+    const error = new HttpError(
+      "Fetching users failed, please try again later.",
+      500,
+    );
+    return next(error);
+  }
+
+  res.json({ users: users.map((user) => user.toObject({ getters: true })) });
 };
 
 const signup = async (req, res, next) => {
-  const { name, email, password, places } = req.body;
+  const { name, email, password } = req.body;
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -60,7 +71,7 @@ const signup = async (req, res, next) => {
     email,
     image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
     password,
-    places,
+    places: [],
   });
 
   try {
