@@ -56,10 +56,46 @@ const Auth = () => {
     setIsLoginMode((prevMode) => !prevMode);
   };
 
-  const authSubmitHandler = (event) => {
+  const authSubmitHandler = async (event) => {
     event.preventDefault();
-    console.log(formState.inputs);
-    auth.login();
+
+    if (isLoginMode) {
+      /*      await fetch("http://localhost:5000/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formState.inputs.email?.value,
+          password: formState.inputs.password?.value,
+    }) */
+    } else {
+      try {
+        const response = await fetch("http://localhost:5000/api/users/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: formState.inputs.name?.value,
+            email: formState.inputs.email?.value,
+            password: formState.inputs.password?.value,
+          }),
+        });
+
+        const responseData = await response.json();
+        console.log(responseData);
+
+        if (!response.ok) {
+          throw new Error(responseData.message);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    console.log("call auth.login() here");
+    auth.login(); // Call the login function from the AuthContext to update the authentication state
   };
 
   return (
