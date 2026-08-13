@@ -51,8 +51,10 @@ const getPlacesByUserId = async (req, res, next) => {
   const userId = req.params.uid;
 
   let places;
+  // let userWithPlaces;
   try {
     places = await Place.find({ creator: userId });
+    // userWithPlaces = await User.findById(userId).populate("places");
   } catch (err) {
     const error = new HttpError(
       "Something went wrong, could not find places.",
@@ -117,8 +119,6 @@ const createPlace = async (req, res, next) => {
     const error = new HttpError("Could not find user for provided id.", 404);
     return next(error);
   }
-
-  console.log(user);
 
   try {
     const sess = await mongoose.startSession();
