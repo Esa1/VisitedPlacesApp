@@ -3,6 +3,8 @@ import React, { useContext, useState } from "react";
 import Card from "../../shared/components/UIElements/Card";
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import {
   VALIDATOR_EMAIL,
   VALIDATOR_MINLENGTH,
@@ -14,8 +16,10 @@ import { AuthContext } from "../../shared/context/auth-context";
 import "./Auth.css";
 
 const Auth = () => {
-  const [isLoginMode, setIsLoginMode] = useState(true);
   const auth = useContext(AuthContext);
+  const [isLoginMode, setIsLoginMode] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -71,6 +75,7 @@ const Auth = () => {
     }) */
     } else {
       try {
+        setIsLoading(true);
         const response = await fetch("http://localhost:5000/api/users/signup", {
           method: "POST",
           headers: {
@@ -86,20 +91,21 @@ const Auth = () => {
         const responseData = await response.json();
         console.log(responseData);
 
-        if (!response.ok) {
-          throw new Error(responseData.message);
-        }
+        console.log("call auth.login() here");
+        setIsLoading(false);
+
+        auth.login(); // Call the login function from the AuthContext to update the authentication state
       } catch (err) {
         console.log(err);
+        setIsLoading(false);
+        setError(err.message || "Something went wrong, please try again.");
       }
     }
-
-    console.log("call auth.login() here");
-    auth.login(); // Call the login function from the AuthContext to update the authentication state
   };
 
   return (
     <Card className="authentication">
+      {isLoading && <LoadingSpinner asOverlay />}
       <h2>Login Required</h2>
       <hr />
       <form onSubmit={authSubmitHandler}>
