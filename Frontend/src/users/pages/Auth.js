@@ -63,19 +63,35 @@ const Auth = () => {
   const authSubmitHandler = async (event) => {
     event.preventDefault();
 
+    setIsLoading(true);
     if (isLoginMode) {
-      /*      await fetch("http://localhost:5000/api/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formState.inputs.email?.value,
-          password: formState.inputs.password?.value,
-    }) */
+      try {
+        const response = await fetch("http://localhost:5000/api/users/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formState.inputs.email?.value,
+            password: formState.inputs.password?.value,
+          }),
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+          throw new Error(responseData.message);
+        }
+
+        setIsLoading(false);
+
+        auth.login(); // Call the login function from the AuthContext to update the authentication state
+      } catch (err) {
+        console.log(err);
+        setIsLoading(false);
+        setError(err.message || "Something went wrong, please try again.");
+      }
     } else {
       try {
-        setIsLoading(true);
         const response = await fetch("http://localhost:5000/api/users/signup", {
           method: "POST",
           headers: {
@@ -92,11 +108,8 @@ const Auth = () => {
         if (!response.ok) {
           throw new Error(responseData.message || "Failed to sign up.");
         }
-        console.log(responseData);
 
-        console.log("call auth.login() here");
         setIsLoading(false);
-
         auth.login(); // Call the login function from the AuthContext to update the authentication state
       } catch (err) {
         console.log(err);
