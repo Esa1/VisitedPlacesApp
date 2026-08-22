@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useHistory } from "react-router-dom";
 
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
@@ -34,6 +35,8 @@ const NewPlace = () => {
     false,
   );
 
+  const history = useHistory();
+
   const placeSubmitHandler = async (event) => {
     event.preventDefault();
     try {
@@ -50,7 +53,7 @@ const NewPlace = () => {
           "Content-Type": "application/json",
         },
       );
-      // Handle successful submission, e.g., redirect to another page
+      history.push("/"); // Redirect to the home page after successful submission
     } catch (err) {
       console.log(err);
     }
