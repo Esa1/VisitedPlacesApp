@@ -65,7 +65,7 @@ const Auth = () => {
 
     if (isLoginMode) {
       try {
-        await sendRequest(
+        const responseData = await sendRequest(
           "http://localhost:5000/api/users/login",
           "POST",
           JSON.stringify({
@@ -77,13 +77,13 @@ const Auth = () => {
           },
         );
 
-        auth.login(); // Call the login function from the AuthContext to update the authentication state
+        auth.login(responseData.user.id); // Call the login function from the AuthContext to update the authentication state
       } catch (err) {
         console.log(err);
       }
     } else {
       try {
-        await sendRequest(
+        const responseData = await sendRequest(
           "http://localhost:5000/api/users/signup",
           "POST",
           JSON.stringify({
@@ -96,7 +96,7 @@ const Auth = () => {
           },
         );
 
-        auth.login(); // Call the login function from the AuthContext to update the authentication state
+        auth.login(responseData.user.id); // Call the login function from the AuthContext to update the authentication state
       } catch (err) {
         console.log(err);
       }
