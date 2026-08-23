@@ -2,6 +2,8 @@ import React from "react";
 import { useParams } from "react-router-dom";
 
 import PlaceList from "../components/PlaceList";
+import { useHttpClient } from "../../shared/hooks/http-hook";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 
 const DUMMY_PLACES = [
   {
@@ -34,8 +36,17 @@ const DUMMY_PLACES = [
 
 const UserPlaces = () => {
   const userId = useParams().userId;
-  const loadedPlaces = DUMMY_PLACES.filter((place) => place.creator === userId);
-  return <PlaceList items={loadedPlaces} />;
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+
+  try {
+    const loadedPlaces = sendRequest(
+      `http://localhost:5000/api/places/user/${userId}`,
+    );
+    return <PlaceList items={loadedPlaces} />;
+  } catch (err) {
+    console.error("Error fetching user places:", err);
+    return <ErrorModal error={err.message} onClear={clearError} />;
+  }
 };
 
 UserPlaces.propTypes = {};
