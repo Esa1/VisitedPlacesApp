@@ -9,39 +9,13 @@ import {
   VALIDATOR_MINLENGTH,
 } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form-hook";
+import { useHttpClient } from "../../shared/hooks/http-hook";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import "./PlaceForm.css";
 
-const DUMMY_PLACES = [
-  {
-    id: "p1",
-    title: "Empire State Building 1",
-    description: "One of the most famous sky scrapers in the world!",
-    imageUrl:
-      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGNo50QB0M2EIP3qi32gH38lYiZ9OGsub1pFxX9-JUxLzGUlkutEctibOdBw7DZlDnKPHEjJURGCjo5cJRhDXy7vlWbS9nH1o55hlWe0YRNi2E8Tww2GlrBbQDiXc2-u5A6kvdGSQ=w270-h312-n-k-no",
-    address: "20 W 34th St, New York, NY 10001",
-    location: {
-      lat: 40.7484405,
-      lng: -73.9878584,
-    },
-    creator: "u1",
-  },
-  {
-    id: "p2",
-    title: "Empire State Building 2",
-    description: "One of the most famous sky scrapers in the world!",
-    imageUrl:
-      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGNo50QB0M2EIP3qi32gH38lYiZ9OGsub1pFxX9-JUxLzGUlkutEctibOdBw7DZlDnKPHEjJURGCjo5cJRhDXy7vlWbS9nH1o55hlWe0YRNi2E8Tww2GlrBbQDiXc2-u5A6kvdGSQ=w270-h312-n-k-no",
-    address: "20 W 34th St, New York, NY 10001",
-    location: {
-      lat: 40.7484405,
-      lng: -73.9878584,
-    },
-    creator: "u2",
-  },
-];
-
 const UpdatePlace = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, error, sendRequest, clearError] = useHttpClient();
   const { placeId } = useParams();
 
   const [formState, inputHandler, setFormData] = useForm(
@@ -58,7 +32,16 @@ const UpdatePlace = () => {
     false,
   );
 
-  const identifiedPlace = DUMMY_PLACES.find((p) => p.id === placeId);
+  let identifiedPlace;
+  setIsLoading(true);
+  try {
+    const responseData = await sendRequest(
+      `http://localhost:5000/api/places/${placeId}`,
+    );
+    identifiedPlace = responseData.place;
+  } catch (err) {
+  }
+  setIsLoading(false);
 
   useEffect(() => {
     if (identifiedPlace) {
@@ -74,6 +57,14 @@ const UpdatePlace = () => {
           },
         },
         true,
+      );
+      sendRequest(
+        `http://localhost:5000/api/places/${placeId}`, "PATCH", JSON.stringify({
+          title: formState.inputs.title.value,
+          description: formState.inputs.description.value,
+        }),
+        {"Content-Type": "application/json",
+        }
       );
     }
     setIsLoading(false);
