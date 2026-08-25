@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState, useContext } from "react";
+import { useParams, useHistory } from "react-router-dom";
 
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
@@ -10,14 +10,17 @@ import {
 } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form-hook";
 import { useHttpClient } from "../../shared/hooks/http-hook";
+import { AuthContext } from "../../shared/context/auth-context";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import "./PlaceForm.css";
 
 const UpdatePlace = () => {
+  const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedPlace, setLoadedPlace] = useState();
   const { placeId } = useParams();
+  const history = useHistory();
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -53,14 +56,31 @@ const UpdatePlace = () => {
           },
           true,
         );
-      } catch (err) {}
+      } catch (err) {
+        console.error("Error fetching place:", err);
+      }
     };
     fetchPlace();
   }, [sendRequest, placeId, setFormData]);
 
-  const placeSubmitHandler = (event) => {
+  const placeSubmitHandler = async (event) => {
     event.preventDefault();
-    console.log(formState.inputs); // Send this to the backend!
+    try {
+      await sendRequest(
+        `http://localhost:5000/api/places/${placeId}`,
+        "PATCH",
+        JSON.stringify({
+          title: formState.inputs.title.value,
+          description: formState.inputs.description.value,
+        }),
+        {
+          "Content-Type": "application/json",
+        },
+      );
+      history.push("/" + auth.userId + "/places");
+    } catch (err) {
+      console.error("Error updating place:", err);
+    }
   };
 
   if (isLoading) {
