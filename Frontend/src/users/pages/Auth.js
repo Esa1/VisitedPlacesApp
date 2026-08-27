@@ -136,7 +136,7 @@ const Auth = () => {
             element="input"
             id="password"
             label="Password"
-            validators={[VALIDATOR_MINLENGTH(1)]}
+            validators={[VALIDATOR_MINLENGTH(6)]}
             errorText="Please enter a password with at least 6 characters."
             onInput={inputHandler}
           />
