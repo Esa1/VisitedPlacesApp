@@ -1,3 +1,6 @@
+const dotenv = require("dotenv");
+dotenv.config();
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -40,9 +43,7 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(
-    "mongodb+srv://adminUser:admin_user_2026@cluster0326.rculus7.mongodb.net/mern?appName=Cluster0326&retryWrites=true&w=majority",
-  )
+  .connect(process.env.MONGO_URL)
   .then(() => {
     app.listen(5000);
   })
