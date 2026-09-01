@@ -194,6 +194,49 @@ The frontend build was re-run after the route cleanup to confirm the app still c
 
 The app should now be aligned across the React 18 bootstrap layer and the route tree, without carrying the redundant nested routing structure that adds noise and maintenance overhead.
 
+## Phase 4: warning reduction and validation
+
+The current project state is stable enough to move into the next phase: systematic validation and warning reduction without broadening scope into missing course features.
+
+This phase is not a free-form cleanup pass. It is a focused review of the compatibility surface area that remains after the React 18 bootstrap and route-level update.
+
+### Phase 4 objective
+
+Reduce the warning noise and confirm the app still behaves normally after the minimal compatibility changes already made.
+
+### Phase 4 validation standard
+
+For each remaining compatibility concern, the project should follow this order:
+
+1. confirm the issue is actually related to the React 18 migration boundary
+2. fix only the compatibility issue at hand
+3. re-run the affected validation command
+4. verify the app still starts without radical errors
+5. record the result in the migration note
+
+### Phase 4 expected scope
+
+Valid targets for this phase include:
+
+- dependency warning review
+- compatibility warning review tied to the React 18 upgrade
+- verification of the app startup and production build after each change
+
+Explicitly out of scope:
+
+- authentication completion
+- deployment setup
+- unrelated feature work or missing-course sections
+- broad refactoring not required for compatibility
+
+### Phase 4 current status
+
+The project has reached a stable React 18 baseline for the current migration boundary. The frontend build has been re-run successfully after the React 18 bootstrap and route cleanup changes, and the app remains in a healthy runtime/build state for continued migration work.
+
+### Phase 4 status update
+
+No direct code-level React 18 blockers are currently apparent in the frontend source after the root bootstrap and route cleanup. The project is in a stable state for the next focused compatibility review, which should remain limited to compatibility issues and should not broaden into missing course work.
+
 ## Final note
 
 This phase is intentionally conservative. It establishes the migration foundation, prevents confusion, and makes the later compatibility work easier to manage. The project does not need to be fully modernized in one jump; it needs a disciplined path that is documented, validated, and safe.
