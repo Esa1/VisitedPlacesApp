@@ -157,6 +157,25 @@ Phase 1 is complete when all of the following are true:
 - the missing authentication and deployment sections are explicitly excluded from this migration path
 - the repo has a clear source-of-truth rule for future AI-assisted and developer work
 
+## Phase 2 status update
+
+Phase 2 is the first actual compatibility upgrade step. The frontend dependency baseline was updated to React 18, and the app bootstrap was migrated from the legacy ReactDOM.render pattern to the React 18 createRoot API.
+
+This was intentionally kept narrow and focused on the compatibility boundary that is required for the React 18 migration.
+
+### Files changed in Phase 2
+
+- [Frontend/package.json](Frontend/package.json)
+- [Frontend/src/index.js](Frontend/src/index.js)
+
+### Validation performed for Phase 2
+
+The frontend was validated with the build command after the dependency and bootstrap changes. The current status is that the app compiles successfully after the React 18 upgrade step.
+
+### Phase 2 target state
+
+The frontend should now be aligned with the React 18 render model with no remaining legacy root render pattern in the app bootstrapping layer.
+
 ## Final note
 
 This phase is intentionally conservative. It establishes the migration foundation, prevents confusion, and makes the later compatibility work easier to manage. The project does not need to be fully modernized in one jump; it needs a disciplined path that is documented, validated, and safe.
