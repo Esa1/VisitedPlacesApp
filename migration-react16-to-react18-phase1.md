@@ -176,6 +176,24 @@ The frontend was validated with the build command after the dependency and boots
 
 The frontend should now be aligned with the React 18 render model with no remaining legacy root render pattern in the app bootstrapping layer.
 
+## Phase 3 status update
+
+Phase 3 focuses on route and app-level compatibility cleanup. The app bootstrap has already been updated to React 18, and the next boundary is the route structure itself.
+
+The route tree was simplified to use a single Switch per authentication state and to avoid the redundant nested Switch pattern that was being rendered inside the main layout.
+
+### Files changed in Phase 3
+
+- [Frontend/src/App.js](Frontend/src/App.js)
+
+### Validation performed for Phase 3
+
+The frontend build was re-run after the route cleanup to confirm the app still compiles normally with the React 18 baseline.
+
+### Phase 3 target state
+
+The app should now be aligned across the React 18 bootstrap layer and the route tree, without carrying the redundant nested routing structure that adds noise and maintenance overhead.
+
 ## Final note
 
 This phase is intentionally conservative. It establishes the migration foundation, prevents confusion, and makes the later compatibility work easier to manage. The project does not need to be fully modernized in one jump; it needs a disciplined path that is documented, validated, and safe.
