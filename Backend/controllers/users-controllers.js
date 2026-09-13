@@ -30,7 +30,6 @@ const getUsers = async (req, res, next) => {
 };
 
 const signup = async (req, res, next) => {
-  const { name, email, password } = req.body;
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -38,6 +37,7 @@ const signup = async (req, res, next) => {
       new HttpError("Invalid inputs passed, please check your data.", 422),
     );
   }
+  const { name, email, password } = req.body;
 
   let existingUser;
   try {

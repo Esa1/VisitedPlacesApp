@@ -20,20 +20,41 @@ export const useHttpClient = () => {
           signal: httpAbortCtrl.signal,
         });
 
-        const responseData = await response.json();
+        const contentType = response.headers.get("content-type") || "";
+        let responseData;
+
+        if (contentType.includes("application/json")) {
+          responseData = await response.json();
+        } else {
+          const text = await response.text();
+          if (!text) {
+            responseData = {};
+          } else {
+            try {
+              responseData = JSON.parse(text);
+            } catch {
+              responseData = { message: text };
+            }
+          }
+        }
 
         activeHttpRequests.current = activeHttpRequests.current.filter(
           (reqCtrl) => reqCtrl !== httpAbortCtrl,
         );
 
         if (!response.ok) {
-          throw new Error(responseData.message);
+          throw new Error(responseData.message || "Request failed.");
         }
 
         setIsLoading(false);
         return responseData;
       } catch (err) {
-        setError(err.message || "Something went wrong, please try again.");
+        const message =
+          err && err.message
+            ? err.message
+            : "Something went wrong, please try again.";
+
+        setError(message);
         setIsLoading(false);
         throw err;
       }
