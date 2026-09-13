@@ -8,6 +8,7 @@ const MIME_TYPE_MAP = {
   "image/jpg": "jpg",
 };
 
+console.log(__dirname);
 const uploadDir = path.join(__dirname, "uploads", "images");
 
 const fileUpload = multer({
