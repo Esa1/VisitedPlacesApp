@@ -69,7 +69,6 @@ const Auth = () => {
   const authSubmitHandler = async (event) => {
     event.preventDefault();
 
-    console.log("Form State:", formState.inputs); // Log the form state for debugging
     if (isLoginMode) {
       try {
         const responseData = await sendRequest(
