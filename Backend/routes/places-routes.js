@@ -10,12 +10,15 @@ const {
 } = require("../controllers/places-controllers");
 // const placesController = require("../controllers/places-controller");
 const fileUpload = require("../middleware/file-upload");
+const checkAuth = require("../middleware/check-auth");
 
 const router = express.Router();
 
 router.get("/:pid", getPlaceById); // placesController.getPlaceById
 
 router.get("/user/:uid", getPlacesByUserId);
+
+router.use(checkAuth); // Protect all routes below this middleware
 
 router.post(
   "/",
