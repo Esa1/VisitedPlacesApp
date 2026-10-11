@@ -51,7 +51,9 @@ const NewPlace = () => {
       formData.append("address", formState.inputs.address.value);
       formData.append("image", formState.inputs.image.value);
       formData.append("creator", auth.userId); // Use the userId from the AuthContext
-      await sendRequest("http://localhost:5000/api/places", "POST", formData);
+      await sendRequest("http://localhost:5000/api/places", "POST", formData, {
+        Authorization: "Bearer " + auth.token,
+      });
       history.push("/"); // Redirect to the home page after successful submission
     } catch (err) {
       console.log(err);

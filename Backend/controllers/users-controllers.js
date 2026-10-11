@@ -60,6 +60,7 @@ const signup = async (req, res, next) => {
 
   let hashedPassword;
   try {
+    console.log("Hashing password:", password);
     hashedPassword = await bcrypt.hash(password, 12);
   } catch (err) {
     const error = new HttpError(
