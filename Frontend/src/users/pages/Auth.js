@@ -83,7 +83,7 @@ const Auth = () => {
           },
         );
 
-        auth.login(responseData.user.id); // Call the login function from the AuthContext to update the authentication state
+        auth.login(responseData.userId, responseData.token); // Call the login function from the AuthContext to update the authentication state
       } catch (err) {
         console.log(err);
       }

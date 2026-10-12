@@ -55,9 +55,7 @@ const NewPlace = () => {
         Authorization: "Bearer " + auth.token,
       });
       history.push("/"); // Redirect to the home page after successful submission
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   return (
