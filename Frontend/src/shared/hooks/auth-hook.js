@@ -3,11 +3,11 @@ import { useState, useCallback, useEffect } from "react";
 let logoutTimer;
 
 export const useAuth = () => {
-  const login = useCallback((uid, token, expirationDate) => {
-    const [token, setToken] = useState(null);
-    const [tokenExpirationDate, setTokenExpirationDate] = useState();
-    const [userId, setUserId] = useState(null);
+  const [token, setToken] = useState(null);
+  const [tokenExpirationDate, setTokenExpirationDate] = useState();
+  const [userId, setUserId] = useState(null);
 
+  const login = useCallback((uid, token, expirationDate) => {
     setToken(token);
     setUserId(uid);
     const tokenExpiration =
@@ -55,4 +55,6 @@ export const useAuth = () => {
       );
     }
   }, [login]);
+
+  return { token, login, logout, userId };
 };
