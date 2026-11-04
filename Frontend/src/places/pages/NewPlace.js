@@ -50,7 +50,6 @@ const NewPlace = () => {
       formData.append("description", formState.inputs.description.value);
       formData.append("address", formState.inputs.address.value);
       formData.append("image", formState.inputs.image.value);
-      formData.append("creator", auth.userId); // Use the userId from the AuthContext
       await sendRequest("http://localhost:5000/api/places", "POST", formData, {
         Authorization: "Bearer " + auth.token,
       });

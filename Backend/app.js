@@ -50,8 +50,16 @@ app.use((error, req, res, next) => {
     .json({ message: error.message || "An unknown error occurred!" });
 });
 
+console.log(`Connecting to MongoDB as ${process.env.DB_USER}`);
+console.log(`Using database: ${process.env.DB_NAME}`);
+console.log(
+  `MongoDB password: ${process.env.DB_PASSWORD ? "********" : "not set"}`,
+);
 mongoose
-  .connect(process.env.MONGO_URL)
+  .connect(
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0326.rculus7.mongodb.net/${process.env.DB_NAME}?appName=Cluster0326&retryWrites=true&w=majority `,
+  )
+  // .connect(process.env.MONGO_URL)
   .then(() => {
     app.listen(5000);
   })
